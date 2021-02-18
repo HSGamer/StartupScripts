@@ -24,7 +24,7 @@ PATCHER=patcher.jar
 # The patcher default download link
 PATCHER_DEFAULT_LINK="https://github.com/KibbleLands/KibblePatcher/releases/download/1.6.0/KibblePatcher-1.6.0.jar"
 # The patcher link file
-PATCHER_LINK_FILE="./patcher"
+PATCHER_LINK_FILE="./link/patcher"
 # The patched jar name
 PATCHED_FILE=server-patched.jar
 ###
@@ -35,13 +35,13 @@ UPDATE=true
 # Note, the jar will always be updated on first startup!
 UPDATE_AFTER="1"
 # Default is new, using the PaperMC Donwnload API, use old if you want to download from a link.
-UPDATER_VERSION="new"
+UPDATER_VERSION="old"
 # Update program. Current options are curl and wget.
 UPDATE_PROGRAM="wget"
 # OLD updater default default link
-JAR_DEFAULT_LINK="https://ci.notom3ga.me/job/Purplane/lastSuccessfulBuild/artifact/purplaneclip.jar"
+JAR_DEFAULT_LINK="https://dl.airplane.gg/latest/Airplane-JDK11/launcher-airplane.jar"
 # OLD updater version download link file.
-JAR_LINK_FILE="./jarfile"
+JAR_LINK_FILE="./link/jarfile"
 ###
 # PaperMC API Settings. More info: https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
 PROJECT="paper"
