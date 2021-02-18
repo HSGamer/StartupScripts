@@ -24,7 +24,7 @@ PATCHER=patcher.jar
 # The patcher default download link
 PATCHER_DEFAULT_LINK="https://github.com/KibbleLands/KibblePatcher/releases/download/1.6.0/KibblePatcher-1.6.0.jar"
 # The patcher link file
-PATCHER_LINK_FILE="./link/patcher"
+PATCHER_LINK_FILE="./patcher"
 # The patched jar name
 PATCHED_FILE=server-patched.jar
 ###
@@ -41,7 +41,7 @@ UPDATE_PROGRAM="wget"
 # OLD updater default default link
 JAR_DEFAULT_LINK="https://dl.airplane.gg/latest/Airplane-JDK11/launcher-airplane.jar"
 # OLD updater version download link file.
-JAR_LINK_FILE="./link/jarfile"
+JAR_LINK_FILE="./jarfile"
 ###
 # PaperMC API Settings. More info: https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
 PROJECT="paper"
