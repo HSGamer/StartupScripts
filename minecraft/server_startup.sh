@@ -29,6 +29,13 @@ PATCHER_LINK_FILE="./patcher"
 PATCHED_FILE=server-patched.jar
 ###
 ###
+# PaperMC API Settings. More info: https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
+PROJECT="paper"
+VERSION="1.16.5"
+# Note: latest is not actually a part of the API, so the script gets the latest build ID using the API first.
+BUILD="latest"
+###
+###
 # Auto updater toggle.
 UPDATE=true
 # After how many restarts should the script attempt to update the jar.
@@ -39,15 +46,16 @@ UPDATER_VERSION="old"
 # Update program. Current options are curl and wget.
 UPDATE_PROGRAM="wget"
 # OLD updater default default link
-JAR_DEFAULT_LINK="https://dl.airplane.gg/latest/Airplane-JDK11/launcher-airplane.jar"
+# Here are some download links from some notable forks of Spigot/Paper
+# - Purplane: https://ci.notom3ga.me/job/Purplane/lastSuccessfulBuild/artifact/purplaneclip.jar
+# - Purpur: https://purpur.pl3x.net/api/v1/purpur/${VERSION}/latest/download
+# - Airplane: https://dl.airplane.gg/latest/Airplane-JDK11/launcher-airplane.jar
+# - Tuinity: https://ci.codemc.io/job/Spottedleaf/job/Tuinity/lastSuccessfulBuild/artifact/tuinity-paperclip.jar
+# - Yatopia: https://api.yatopiamc.org/v2/stableBuild/download?branch=ver/${VERSION}
+# - Origami: https://ci.minebench.de/job/Origami/lastSuccessfulBuild/artifact/origamicrane.jar
+JAR_DEFAULT_LINK="https://api.yatopiamc.org/v2/stableBuild/download?branch=ver/${VERSION}"
 # OLD updater version download link file.
 JAR_LINK_FILE="./jarfile"
-###
-# PaperMC API Settings. More info: https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
-PROJECT="paper"
-VERSION="1.16.5"
-# Note: latest is not actually a part of the API, so the script gets the latest build ID using the API first.
-BUILD="latest"
 ###
 # Only use one garbage collector!
 GONE=true               #Use G1 GC. Flags from: https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
@@ -55,7 +63,7 @@ SHEN=false              #Use ShenandoahGC. Untested for now.
 ZGC=false               #The Z Garbage Collector. Please read: https://krusic22.com/2020/03/25/higher-performance-crafting-using-jdk11-and-zgc/
 ###
 # Experimental stuff. Good luck.
-EXP=false               #Enable experimental stuff... It might cause unexpected problems but I haven't noticed any yet.
+EXP=true               #Enable experimental stuff... It might cause unexpected problems but I haven't noticed any yet.
 LP=true                #Enable only if you have Large/Huge Pages enabled, transparent pages are recommended for regular users.
 X86=true               #Flags that should only work on X86.
 ###
