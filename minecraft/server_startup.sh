@@ -87,7 +87,6 @@ PARMS="
 -XX:+ParallelRefProcEnabled
 -XX:-OmitStackTraceInFastThrow
 -XX:+ShowCodeDetailsInExceptionMessages
--XX:+UseCompressedOops
 -XX:+PerfDisableSharedMem
 "
 # G1 optimizations...
@@ -99,6 +98,8 @@ GONEP="
 -XX:G1RSetUpdatingPauseTimePercent=5
 -XX:SurvivorRatio=32
 -XX:MaxTenuringThreshold=1
+-Dusing.aikars.flags=https://mcflags.emc.gs
+-Daikars.new.flags=true
 "
 # G1 Additional optimizations for small RAMs
 GONEP1="
