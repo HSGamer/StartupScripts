@@ -33,7 +33,7 @@ PATCHED_FILE=server-patched.jar
 ###
 # PaperMC API Settings. More info: https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
 PROJECT="paper"
-VERSION="1.13.2"
+VERSION="1.16.5"
 # Note: latest is not actually a part of the API, so the script gets the latest build ID using the API first.
 BUILD="latest"
 ###
@@ -44,7 +44,7 @@ UPDATE=true
 # Note, the jar will always be updated on first startup!
 UPDATE_AFTER="1"
 # Default is new, using the PaperMC Donwnload API, use old if you want to download from a link.
-UPDATER_VERSION="new"
+UPDATER_VERSION="old"
 # Update program. Current options are curl and wget.
 UPDATE_PROGRAM="wget"
 # OLD updater default default link
@@ -70,7 +70,7 @@ LP=true                #Enable only if you have Large/Huge Pages enabled, transp
 X86=true               #Flags that should only work on X86.
 ###
 # Jar parameters like --nogui or --forceUpgrade, you can list all options by setting this to --help.
-AFTERJAR=""
+AFTERJAR="--nogui"
 ###
 # Unused Parameters, you might want to use some of them depending on your configuration, copy the parameters under Normal Parameters,
 # since IgnoreUnrecognizedVMOptions is set, unknown / invalid options will be ignored instead of stopping the JVM.
