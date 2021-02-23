@@ -7,6 +7,8 @@
 # Less time spent on GC, the better the performance, but possibly higher ram usage.
 # Note: 1G = 1024M
 
+# The Java run program
+JAVA_RUN="java"
 # USE VALUES IN M! Sometimes setting this to the same value as MAX_RAM can help performance.
 START_RAM=2048
 # USE VALUES IN M!
@@ -31,7 +33,7 @@ PATCHED_FILE=server-patched.jar
 ###
 # PaperMC API Settings. More info: https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
 PROJECT="paper"
-VERSION="1.16.5"
+VERSION="1.13.2"
 # Note: latest is not actually a part of the API, so the script gets the latest build ID using the API first.
 BUILD="latest"
 ###
@@ -42,7 +44,7 @@ UPDATE=true
 # Note, the jar will always be updated on first startup!
 UPDATE_AFTER="1"
 # Default is new, using the PaperMC Donwnload API, use old if you want to download from a link.
-UPDATER_VERSION="old"
+UPDATER_VERSION="new"
 # Update program. Current options are curl and wget.
 UPDATE_PROGRAM="wget"
 # OLD updater default default link
@@ -68,7 +70,7 @@ LP=true                #Enable only if you have Large/Huge Pages enabled, transp
 X86=true               #Flags that should only work on X86.
 ###
 # Jar parameters like --nogui or --forceUpgrade, you can list all options by setting this to --help.
-AFTERJAR="--nogui"
+AFTERJAR=""
 ###
 # Unused Parameters, you might want to use some of them depending on your configuration, copy the parameters under Normal Parameters,
 # since IgnoreUnrecognizedVMOptions is set, unknown / invalid options will be ignored instead of stopping the JVM.
@@ -243,6 +245,10 @@ function Check {
         echo $JAR_DEFAULT_LINK > $JAR_LINK_FILE
     fi
 }
+function Run {
+    echo "Starting!"
+    $JAVA_RUN -Xms$START_RAM\M -Xmx$MAX_RAM\M $PARMS -jar $PATCHED_FILE $AFTERJAR
+}
 ###
 # You can stop this script by pressing CTRL+C multiple times.
 while true
@@ -251,9 +257,7 @@ do
     Update
     Patch
     RUN=$((RUN+1))
-
-    echo "Starting!"
-    java -Xms$START_RAM\M -Xmx$MAX_RAM\M $PARMS -jar $PATCHED_FILE $AFTERJAR
+    Run
 
     echo "Server will restart in:"
     COUNT=$DELAY_RESTART
