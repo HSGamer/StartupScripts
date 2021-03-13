@@ -49,13 +49,12 @@ UPDATER_VERSION="old"
 UPDATE_PROGRAM="wget"
 # OLD updater default default link
 # Here are some download links from some notable forks of Spigot/Paper
-# - Purplane: https://ci.notom3ga.me/job/Purplane/lastSuccessfulBuild/artifact/purplaneclip.jar
 # - Purpur: https://purpur.pl3x.net/api/v1/purpur/${VERSION}/latest/download
 # - Airplane: https://dl.airplane.gg/latest/Airplane-JDK11/launcher-airplane.jar
 # - Tuinity: https://ci.codemc.io/job/Spottedleaf/job/Tuinity/lastSuccessfulBuild/artifact/tuinity-paperclip.jar
 # - Yatopia: https://api.yatopiamc.org/v2/stableBuild/download?branch=ver/${VERSION}
 # - Origami: https://ci.minebench.de/job/Origami/lastSuccessfulBuild/artifact/origamicrane.jar
-JAR_DEFAULT_LINK="https://api.yatopiamc.org/v2/stableBuild/download?branch=ver/${VERSION}"
+JAR_DEFAULT_LINK="https://purpur.pl3x.net/api/v1/purpur/${VERSION}/latest/download"
 # OLD updater version download link file.
 JAR_LINK_FILE="./jarfile"
 ###
