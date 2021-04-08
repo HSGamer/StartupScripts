@@ -24,7 +24,7 @@ PATCH=true
 # The patcher file name
 PATCHER=patcher.jar
 # The patcher default download link
-PATCHER_DEFAULT_LINK="https://github.com/KibbleLands/KibblePatcher/releases/download/1.6.2/KibblePatcher-1.6.2.jar"
+PATCHER_DEFAULT_LINK="https://github.com/KibbleLands/KibblePatcher/releases/download/1.6.3/KibblePatcher-1.6.3.jar"
 # The patcher link file
 PATCHER_LINK_FILE="./patcher"
 # The patched jar name
