@@ -24,9 +24,7 @@ PATCH=true
 # The patcher file name
 PATCHER=patcher.jar
 # The patcher default download link
-PATCHER_DEFAULT_LINK="https://github.com/KibbleLands/KibblePatcher/releases/download/1.6.3/KibblePatcher-1.6.3.jar"
-# The patcher link file
-PATCHER_LINK_FILE="./patcher"
+PATCHER_LINK="https://github.com/KibbleLands/KibblePatcher/releases/download/1.6.3/KibblePatcher-1.6.3.jar"
 # The patched jar name
 PATCHED_FILE=server-patched.jar
 ###
@@ -47,16 +45,14 @@ UPDATE_AFTER="1"
 UPDATER_VERSION="old"
 # Update program. Current options are curl and wget.
 UPDATE_PROGRAM="wget"
-# OLD updater default default link
+# OLD updater link
 # Here are some download links from some notable forks of Spigot/Paper
 # - Purpur: https://purpur.pl3x.net/api/v1/purpur/${VERSION}/latest/download
 # - Airplane: https://dl.airplane.gg/latest/Airplane-JDK11/launcher-airplane.jar
 # - Tuinity: https://ci.codemc.io/job/Spottedleaf/job/Tuinity/lastSuccessfulBuild/artifact/tuinity-paperclip.jar
 # - Yatopia: https://api.yatopiamc.org/v2/stableBuild/download?branch=ver/${VERSION}
 # - Origami: https://ci.minebench.de/job/Origami/lastSuccessfulBuild/artifact/origamicrane.jar
-JAR_DEFAULT_LINK="https://purpur.pl3x.net/api/v1/purpur/${VERSION}/latest/download"
-# OLD updater version download link file.
-JAR_LINK_FILE="./jarfile"
+JAR_LINK="https://purpur.pl3x.net/api/v1/purpur/${VERSION}/latest/download"
 ###
 # Only use one garbage collector!
 GONE=true               #Use G1 GC. Flags from: https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
@@ -202,7 +198,7 @@ function Update {
             fi
             #Old updater
             if [ "$UPDATER_VERSION" = "old" ]; then
-                read JARLINK < $JAR_LINK_FILE
+                JARLINK=$JAR_LINK
                 if [ $UPDATE_PROGRAM = "curl" ]; then
                     curl -s "$JARLINK" > "$JAR_NAME"
                 fi
@@ -213,7 +209,7 @@ function Update {
             
             if [ "$PATCH" = true ]; then
                 echo "Updating patcher..."
-                read PATCHERLINK < $PATCHER_LINK_FILE
+                PATCHERLINK=$PATCHER_LINK
                 if [ $UPDATE_PROGRAM = "curl" ]; then
                     curl -s "$PATCHERLINK" > "$PATCHER"
                 fi
@@ -235,15 +231,7 @@ function Patch {
         fi
     fi
 }
-# Check link file function
-function Check {
-    if [ ! -f $PATCHER_LINK_FILE ]; then
-        echo $PATCHER_DEFAULT_LINK > $PATCHER_LINK_FILE
-    fi
-    if [ ! -f $JAR_LINK_FILE ]; then
-        echo $JAR_DEFAULT_LINK > $JAR_LINK_FILE
-    fi
-}
+# Run function
 function Run {
     echo "Starting!"
     $JAVA_RUN -Xms$START_RAM\M -Xmx$MAX_RAM\M $PARMS -jar $PATCHED_FILE $AFTERJAR
@@ -252,7 +240,6 @@ function Run {
 # You can stop this script by pressing CTRL+C multiple times.
 while true
 do
-    Check
     Update
     Patch
     RUN=$((RUN+1))
