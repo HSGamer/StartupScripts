@@ -19,16 +19,6 @@ JAR_NAME=server.jar
 DELAY_RESTART=5
 ###
 ###
-# Enable patching the jar file
-PATCH=true
-# The patcher file name
-PATCHER=patcher.jar
-# The patcher download link
-PATCHER_LINK="https://github.com/KibbleLands/KibblePatcher/releases/download/1.6.4/KibblePatcher-1.6.4.jar"
-# The patched jar name
-PATCHED_FILE=server-patched.jar
-###
-###
 # PaperMC API Settings. More info: https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
 PROJECT="paper"
 VERSION="1.16.5"
@@ -200,42 +190,19 @@ function Update {
                     wget "$JARLINK" -O "$JAR_NAME" 2>/dev/null
                 fi
             fi
-            
-            if [ "$PATCH" = true ]; then
-                echo "Updating patcher..."
-                PATCHERLINK=$PATCHER_LINK
-                if [ $UPDATE_PROGRAM = "curl" ]; then
-                    curl -s "$PATCHERLINK" > "$PATCHER"
-                fi
-                if [ $UPDATE_PROGRAM = "wget" ]; then
-                    wget "$PATCHERLINK" -O "$PATCHER" 2>/dev/null
-                fi
-            fi
-        fi
-    fi
-}
-# Patch function
-function Patch {
-    if [ "$(( $RUN % $UPDATE_AFTER ))" = 0 ] || [ "$RUN" = 0 ]; then
-        if [ "$PATCH" = true ]; then
-            echo "Patching!"
-            java -jar $PATCHER $JAR_NAME $PATCHED_FILE
-        else
-            PATCHED_FILE=$JAR_NAME
         fi
     fi
 }
 # Run function
 function Run {
     echo "Starting!"
-    $JAVA_RUN -Xms$START_RAM\M -Xmx$MAX_RAM\M $PARMS -jar $PATCHED_FILE $AFTERJAR
+    $JAVA_RUN -Xms$START_RAM\M -Xmx$MAX_RAM\M $PARMS -jar $JAR_NAME $AFTERJAR
 }
 ###
 # You can stop this script by pressing CTRL+C multiple times.
 while true
 do
     Update
-    Patch
     RUN=$((RUN+1))
     Run
 
