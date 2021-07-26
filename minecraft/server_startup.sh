@@ -36,7 +36,7 @@ UPDATER_VERSION="old"
 # Update program. Current options are curl and wget.
 UPDATE_PROGRAM="wget"
 # OLD updater link
-JAR_LINK="https://purpur.pl3x.net/api/v1/purpur/${VERSION}/latest/download"
+JAR_LINK="https://api.pl3x.net/v2/purpur/${VERSION}/latest/download"
 ###
 # Only use one garbage collector!
 GONE=true               #Use G1 GC. Flags from: https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
