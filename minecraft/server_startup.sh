@@ -175,7 +175,7 @@ function Run {
     echo "Starting!"
     $JAVA_RUN -Xms$START_RAM\M -Xmx$MAX_RAM\M $PARMS -jar $JAR_NAME $AFTERJAR
 }
-# SDKMAN Detetion
+# SDKMAN Detection
 function SDKMAN {
     if [ -f ".sdkmanrc" ]; then
         source "$HOME/.sdkman/bin/sdkman-init.sh"
