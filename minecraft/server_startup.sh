@@ -163,16 +163,8 @@ function Update {
         if [ "$(( $RUN % $UPDATE_AFTER ))" = 0 ] || [ "$RUN" = 0 ]; then
             echo "Updating Jar..."
             case $PROJECT in
-                paper )
-                    if [ "$BUILD" = "latest" ]; then
-                        if [ $UPDATE_PROGRAM = "curl" ]; then
-                            BUILD=$(curl -s https://papermc.io/api/v2/projects/paper/versions/$VERSION | grep -E -o '[0-9]+' | tail -1)
-                        fi
-                        if [ $UPDATE_PROGRAM = "wget" ]; then
-                            BUILD=$(wget -q https://papermc.io/api/v2/projects/paper/versions/$VERSION -O - | grep -E -o '[0-9]+' | tail -1)
-                        fi
-                    fi
-                    JARLINK="https://papermc.io/api/v2/projects/$PROJECT/versions/$VERSION/builds/$BUILD/downloads/$PROJECT-$VERSION-$BUILD.jar"
+                http* )
+                    JARLINK=$PROJECT
                     ;;
                 purpur )
                     JARLINK="https://api.pl3x.net/v2/purpur/$VERSION/$BUILD/download"
@@ -191,7 +183,15 @@ function Update {
                     JARLINK="$JARLINK/artifact/launcher-airplane.jar"
                     ;;
                 * )
-                    JARLINK=$PROJECT
+                    if [ "$BUILD" = "latest" ]; then
+                        if [ $UPDATE_PROGRAM = "curl" ]; then
+                            BUILD=$(curl -s https://papermc.io/api/v2/projects/paper/versions/$VERSION | grep -E -o '[0-9]+' | tail -1)
+                        fi
+                        if [ $UPDATE_PROGRAM = "wget" ]; then
+                            BUILD=$(wget -q https://papermc.io/api/v2/projects/paper/versions/$VERSION -O - | grep -E -o '[0-9]+' | tail -1)
+                        fi
+                    fi
+                    JARLINK="https://papermc.io/api/v2/projects/$PROJECT/versions/$VERSION/builds/$BUILD/downloads/$PROJECT-$VERSION-$BUILD.jar"
                     ;;
             esac
 
