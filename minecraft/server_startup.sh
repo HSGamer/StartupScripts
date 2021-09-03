@@ -40,13 +40,11 @@ JAR_LINK="https://api.pl3x.net/v2/purpur/${VERSION}/latest/download"
 ###
 # Only use one garbage collector!
 GONE=true               #Use G1 GC. Flags from: https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
-SHEN=false              #Use ShenandoahGC. Untested for now.
-ZGC=false               #The Z Garbage Collector. Please read: https://krusic22.com/2020/03/25/higher-performance-crafting-using-jdk11-and-zgc/
 ###
 # Experimental stuff. Good luck.
-EXP=true               #Enable experimental stuff... It might cause unexpected problems but I haven't noticed any yet.
-LP=true                #Enable only if you have Large/Huge Pages enabled, transparent pages are recommended for regular users.
-X86=true               #Flags that should only work on X86.
+EXP=false               #Enable experimental stuff... It might cause unexpected problems but I haven't noticed any yet.
+LP=false                #Enable only if you have Large/Huge Pages enabled, transparent pages are recommended for regular users.
+X86=false               #Flags that should only work on X86.
 ###
 # Jar parameters like --nogui or --forceUpgrade, you can list all options by setting this to --help.
 AFTERJAR="--nogui"
