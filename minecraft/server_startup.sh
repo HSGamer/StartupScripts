@@ -19,7 +19,9 @@ JAR_NAME=server.jar
 DELAY_RESTART=5
 ###
 ###
-# PaperMC API Settings. More info: https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
+# The server project name
+# Currently allowed: paper, purpur, airplane
+# If you want to use your custom project, put the download link of the project file instead
 PROJECT="paper"
 VERSION="1.16.5"
 # Note: latest is not actually a part of the API, so the script gets the latest build ID using the API first.
@@ -31,12 +33,8 @@ UPDATE=true
 # After how many restarts should the script attempt to update the jar.
 # Note, the jar will always be updated on first startup!
 UPDATE_AFTER="1"
-# Default is new, using the PaperMC Donwnload API, use old if you want to download from a link.
-UPDATER_VERSION="old"
 # Update program. Current options are curl and wget.
 UPDATE_PROGRAM="wget"
-# OLD updater link
-JAR_LINK="https://api.pl3x.net/v2/purpur/${VERSION}/latest/download"
 ###
 # Only use one garbage collector!
 GONE=true               #Use G1 GC. Flags from: https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
@@ -125,8 +123,7 @@ function Update {
     if [ "$UPDATE" = true ]; then
         if [ "$(( $RUN % $UPDATE_AFTER ))" = 0 ] || [ "$RUN" = 0 ]; then
             echo "Updating Jar..."
-            #New PaperMC API updater
-            if [ "$UPDATER_VERSION" = "new" ]; then
+            if [ "$PROJECT" = "paper" ]; then
                 if [ "$BUILD" = "latest" ]; then
                     if [ $UPDATE_PROGRAM = "curl" ]; then
                         BUILD=$(curl -s https://papermc.io/api/v2/projects/paper/versions/$VERSION | grep -E -o '[0-9]+' | tail -1)
@@ -136,22 +133,29 @@ function Update {
                     fi
                 fi
                 JARLINK="https://papermc.io/api/v2/projects/$PROJECT/versions/$VERSION/builds/$BUILD/downloads/$PROJECT-$VERSION-$BUILD.jar"
-                if [ $UPDATE_PROGRAM = "curl" ]; then
-                    curl -s "$JARLINK" > "$JAR_NAME"
+            elif [ "$PROJECT" = "purpur" ]; then
+                JARLINK="https://api.pl3x.net/v2/purpur/$VERSION/$BUILD/download"
+            elif [ "$PROJECT" = "airplane" ]; then
+                if [ "$VERSION" = "1.16.5" ]; then
+                    JARLINK="https://ci.tivy.ca/job/Airplane-1.16"
+                elif [ "$VERSION" = "1.17.1" ]; then
+                    JARLINK="https://ci.tivy.ca/job/Airplane-1.17"
                 fi
-                if [ $UPDATE_PROGRAM = "wget" ]; then
-                    wget "$JARLINK" -O "$JAR_NAME" 2>/dev/null
+                if [ "$BUILD" = "latest" ]; then
+                    JARLINK="$JARLINK/lastSuccessfulBuild"
+                else
+                    JARLINK="$JARLINK/$BUILD"
                 fi
+                JARLINK="$JARLINK/artifact/launcher-airplane.jar"
+            else
+                JARLINK=$PROJECT
             fi
-            #Old updater
-            if [ "$UPDATER_VERSION" = "old" ]; then
-                JARLINK=$JAR_LINK
-                if [ $UPDATE_PROGRAM = "curl" ]; then
-                    curl -s "$JARLINK" > "$JAR_NAME"
-                fi
-                if [ $UPDATE_PROGRAM = "wget" ]; then
-                    wget "$JARLINK" -O "$JAR_NAME" 2>/dev/null
-                fi
+
+            if [ $UPDATE_PROGRAM = "curl" ]; then
+                curl -s "$JARLINK" > "$JAR_NAME"
+            fi
+            if [ $UPDATE_PROGRAM = "wget" ]; then
+                wget "$JARLINK" -O "$JAR_NAME" 2>/dev/null
             fi
         fi
     fi
