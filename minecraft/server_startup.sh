@@ -168,14 +168,15 @@ function Run {
 # SDKMAN Detetion
 function SDKMAN {
     if [ -f ".sdkmanrc" ]; then
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
         sdk env
     fi
 }
 ###
 # You can stop this script by pressing CTRL+C multiple times.
+SDKMAN
 while true
 do
-    SDKMAN
     Update
     RUN=$((RUN+1))
     Run
