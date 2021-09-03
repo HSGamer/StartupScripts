@@ -196,7 +196,7 @@ function Update {
             esac
 
             if [ $UPDATE_PROGRAM = "curl" ]; then
-                curl -s "$JARLINK" > "$JAR_NAME"
+                curl -s -o "$JAR_NAME" "$JARLINK"
             elif [ $UPDATE_PROGRAM = "wget" ]; then
                 wget "$JARLINK" -O "$JAR_NAME" 2>/dev/null
             fi
