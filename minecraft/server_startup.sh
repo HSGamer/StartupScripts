@@ -98,33 +98,6 @@ GONEP2="
 -XX:G1ReservePercent=15
 -XX:InitiatingHeapOccupancyPercent=20
 "
-# Shenandoah options that might be worth looking into, some of the options only got added in JDK12+, currently set to default values from AdoptJDK13.
-SHENP="
--XX:ShenandoahAllocSpikeFactor=5
--XX:ShenandoahControlIntervalAdjustPeriod=1000
--XX:ShenandoahControlIntervalMax=10
--XX:ShenandoahControlIntervalMin=1
--XX:ShenandoahInitFreeThreshold=70
--XX:ShenandoahFreeThreshold=10
--XX:ShenandoahGarbageThreshold=60
--XX:ShenandoahGuaranteedGCInterval=300000
--XX:ShenandoahMinFreeThreshold=10
--XX:-ShenandoahRegionSampling
--XX:ShenandoahRegionSamplingRate=40
--XX:ShenandoahParallelSafepointThreads=4
--XX:+ShenandoahOptimizeInstanceFinals
--XX:+ShenandoahOptimizeStaticFinals
-"
-# ZGC options. Most of them only available in JDK13+.
-# Copy them to the ZGCP area.
-#-XX:-ZUncommit
-#-XX:ZUncommitDelay=5
-#-XX:SoftMaxHeapSize=4G
-#-XX:+ZCollectionInterval=5
-#-XX:ZAllocationSpikeTolerance=2.0
-ZGCP="
-
-"
 # Experimental options... Use at your own risk!
 if [ "$EXP" = true ]; then
 echo "You have enabled Experimental Options! Use at your own risk!"
@@ -142,14 +115,6 @@ if [ "$GONE" = true ]; then
     else
         PARMS="$PARMS $GONEP1"
     fi
-fi
-# Experimental ShenandoahGC
-if [ "$SHEN" = true ]; then
-    PARMS="$PARMS -XX:+DisableExplicitGC -XX:-UseParallelGC -XX:-UseParallelOldGC -XX:+UseShenandoahGC $SHENP"
-fi
-# Experimental ZGC
-if [ "$ZGC" = true ]; then
-    PARMS="$PARMS -XX:+DisableExplicitGC -XX:-UseParallelGC -XX:-UseParallelOldGC -XX:-UseG1GC -XX:+UseZGC $ZGCP"
 fi
 # Experimental X86 abomination, some of the flags may not be ARCH specific, so they could work on other platforms as well.
 if [ "$X86" = true ]; then
