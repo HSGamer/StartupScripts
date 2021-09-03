@@ -165,10 +165,17 @@ function Run {
     echo "Starting!"
     $JAVA_RUN -Xms$START_RAM\M -Xmx$MAX_RAM\M $PARMS -jar $JAR_NAME $AFTERJAR
 }
+# SDKMAN Detetion
+function SDKMAN {
+    if [ -f ".sdkmanrc" ]; then
+        sdk env
+    fi
+}
 ###
 # You can stop this script by pressing CTRL+C multiple times.
 while true
 do
+    SDKMAN
     Update
     RUN=$((RUN+1))
     Run
