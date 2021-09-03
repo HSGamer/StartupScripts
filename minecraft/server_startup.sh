@@ -129,38 +129,42 @@ function Update {
     if [ "$UPDATE" = true ]; then
         if [ "$(( $RUN % $UPDATE_AFTER ))" = 0 ] || [ "$RUN" = 0 ]; then
             echo "Updating Jar..."
-            if [ "$PROJECT" = "paper" ]; then
-                if [ "$BUILD" = "latest" ]; then
-                    if [ $UPDATE_PROGRAM = "curl" ]; then
-                        BUILD=$(curl -s https://papermc.io/api/v2/projects/paper/versions/$VERSION | grep -E -o '[0-9]+' | tail -1)
+            case $PROJECT in
+                paper )
+                    if [ "$BUILD" = "latest" ]; then
+                        if [ $UPDATE_PROGRAM = "curl" ]; then
+                            BUILD=$(curl -s https://papermc.io/api/v2/projects/paper/versions/$VERSION | grep -E -o '[0-9]+' | tail -1)
+                        fi
+                        if [ $UPDATE_PROGRAM = "wget" ]; then
+                            BUILD=$(wget -q https://papermc.io/api/v2/projects/paper/versions/$VERSION -O - | grep -E -o '[0-9]+' | tail -1)
+                        fi
                     fi
-                    if [ $UPDATE_PROGRAM = "wget" ]; then
-                        BUILD=$(wget -q https://papermc.io/api/v2/projects/paper/versions/$VERSION -O - | grep -E -o '[0-9]+' | tail -1)
+                    JARLINK="https://papermc.io/api/v2/projects/$PROJECT/versions/$VERSION/builds/$BUILD/downloads/$PROJECT-$VERSION-$BUILD.jar"
+                    ;;
+                purpur )
+                    JARLINK="https://api.pl3x.net/v2/purpur/$VERSION/$BUILD/download"
+                    ;;
+                airplane )
+                    if [ "$VERSION" = "1.16.5" ]; then
+                        JARLINK="https://ci.tivy.ca/job/Airplane-1.16"
+                    elif [ "$VERSION" = "1.17.1" ]; then
+                        JARLINK="https://ci.tivy.ca/job/Airplane-1.17"
                     fi
-                fi
-                JARLINK="https://papermc.io/api/v2/projects/$PROJECT/versions/$VERSION/builds/$BUILD/downloads/$PROJECT-$VERSION-$BUILD.jar"
-            elif [ "$PROJECT" = "purpur" ]; then
-                JARLINK="https://api.pl3x.net/v2/purpur/$VERSION/$BUILD/download"
-            elif [ "$PROJECT" = "airplane" ]; then
-                if [ "$VERSION" = "1.16.5" ]; then
-                    JARLINK="https://ci.tivy.ca/job/Airplane-1.16"
-                elif [ "$VERSION" = "1.17.1" ]; then
-                    JARLINK="https://ci.tivy.ca/job/Airplane-1.17"
-                fi
-                if [ "$BUILD" = "latest" ]; then
-                    JARLINK="$JARLINK/lastSuccessfulBuild"
-                else
-                    JARLINK="$JARLINK/$BUILD"
-                fi
-                JARLINK="$JARLINK/artifact/launcher-airplane.jar"
-            else
-                JARLINK=$PROJECT
-            fi
+                    if [ "$BUILD" = "latest" ]; then
+                        JARLINK="$JARLINK/lastSuccessfulBuild"
+                    else
+                        JARLINK="$JARLINK/$BUILD"
+                    fi
+                    JARLINK="$JARLINK/artifact/launcher-airplane.jar"
+                    ;;
+                * )
+                    JARLINK=$PROJECT
+                    ;;
+            esac
 
             if [ $UPDATE_PROGRAM = "curl" ]; then
                 curl -s "$JARLINK" > "$JAR_NAME"
-            fi
-            if [ $UPDATE_PROGRAM = "wget" ]; then
+            elif [ $UPDATE_PROGRAM = "wget" ]; then
                 wget "$JARLINK" -O "$JAR_NAME" 2>/dev/null
             fi
         fi
