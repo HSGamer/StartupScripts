@@ -25,8 +25,8 @@ DELAY_RESTART=5
 ###
 ###
 # The server project name
-# Currently allowed: paper, purpur, airplane
-# If you want to use your custom project, put the download link of the project file instead
+# Currently allowed: spigot, purpur, airplane, paper, waterfall, travertine
+# If you want to use your custom project, you can directly put the download link of the project file
 PROJECT="paper"
 VERSION="1.16.5"
 # Note: latest is not actually a part of the API, so the script gets the latest build ID using the API first.
@@ -161,7 +161,9 @@ RUN=0
 function Update {
     if [ "$UPDATE" = true ]; then
         if [ "$(( $RUN % $UPDATE_AFTER ))" = 0 ] || [ "$RUN" = 0 ]; then
+            ONLY_JARLINK=false
             echo "Updating Jar..."
+
             case $PROJECT in
                 http* )
                     JARLINK=$PROJECT
@@ -182,6 +184,27 @@ function Update {
                     fi
                     JARLINK="$JARLINK/artifact/launcher-airplane.jar"
                     ;;
+                spigot )
+                    SERVER_DIR="$PWD"
+                    BUILDTOOLS_LINK="https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
+                    BUILDTOOLS_NAME="BuildTools.jar"
+                    BUILD_DIR="$SERVER_DIR/BuildTools"
+
+                    [ ! -d "$BUILD_DIR" ] && mkdir -p "$BUILD_DIR"
+                    cd $BUILD_DIR
+
+                    if [ $UPDATE_PROGRAM = "curl" ]; then
+                        curl -s -o "$BUILDTOOLS_NAME" "$BUILDTOOLS_LINK"
+                    elif [ $UPDATE_PROGRAM = "wget" ]; then
+                        wget "$BUILDTOOLS_LINK" -O "$BUILDTOOLS_NAME" 2>/dev/null
+                    fi
+
+                    $JAVA_RUN -jar "$BUILDTOOLS_NAME" --rev "$VERSION" --compile-if-changed
+                    cp spigot-*.jar "$SERVER_DIR/$JAR_NAME"
+
+                    cd $SERVER_DIR
+                    ONLY_JARLINK=false
+                    ;;
                 * )
                     if [ "$BUILD" = "latest" ]; then
                         if [ $UPDATE_PROGRAM = "curl" ]; then
@@ -195,10 +218,12 @@ function Update {
                     ;;
             esac
 
-            if [ $UPDATE_PROGRAM = "curl" ]; then
-                curl -s -o "$JAR_NAME" "$JARLINK"
-            elif [ $UPDATE_PROGRAM = "wget" ]; then
-                wget "$JARLINK" -O "$JAR_NAME" 2>/dev/null
+            if [ "$ONLY_JARLINK" = true ]; then
+                if [ $UPDATE_PROGRAM = "curl" ]; then
+                    curl -s -o "$JAR_NAME" "$JARLINK"
+                elif [ $UPDATE_PROGRAM = "wget" ]; then
+                    wget "$JARLINK" -O "$JAR_NAME" 2>/dev/null
+                fi
             fi
         fi
     fi
