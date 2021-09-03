@@ -2,7 +2,7 @@
 # Original by Kristjan Krusic aka. krusic22
 # Modified by HSGamer
 # Don't forget to adjust the variables according your own needs!
-# This is an Java 11+ optimised script! Get the most recent AdoptJDK or ZuluJDK for ARM.
+# This is an Java 16+ optimised script! Get the most recent AdoptJDK or ZuluJDK for ARM.
 # This script is speed-optimized and won't reduce ram use!
 # Less time spent on GC, the better the performance, but possibly higher ram usage.
 # Note: 1G = 1024M
@@ -43,6 +43,8 @@ UPDATE_PROGRAM="wget"
 ###
 # Only use one garbage collector!
 GONE=true               #Use G1 GC. Flags from: https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
+SHEN=false              #Use ShenandoahGC. Untested for now.
+ZGC=false               #The Z Garbage Collector. Please read: https://krusic22.com/2020/03/25/higher-performance-crafting-using-jdk11-and-zgc/
 ###
 # Experimental stuff. Good luck.
 EXP=false               #Enable experimental stuff... It might cause unexpected problems but I haven't noticed any yet.
@@ -66,11 +68,11 @@ PARMS="
 -XX:+IgnoreUnrecognizedVMOptions
 -XX:+UnlockExperimentalVMOptions
 -XX:+UnlockDiagnosticVMOptions
--XX:+UseGCOverheadLimit
--XX:+ParallelRefProcEnabled
 -XX:-OmitStackTraceInFastThrow
 -XX:+ShowCodeDetailsInExceptionMessages
+-XX:+DisableExplicitGC
 -XX:+PerfDisableSharedMem
+--illegal-access=permit
 "
 # G1 optimizations...
 GONEP="
@@ -100,27 +102,58 @@ GONEP2="
 -XX:G1ReservePercent=15
 -XX:InitiatingHeapOccupancyPercent=20
 "
-# Experimental options... Use at your own risk!
+#Shenandoah options that might be worth looking into, some of the options only got added in JDK12+, currently set to default values from AdoptJDK13.
+SHENP="
+-XX:ShenandoahAllocSpikeFactor=5
+-XX:ShenandoahControlIntervalAdjustPeriod=1000
+-XX:ShenandoahControlIntervalMax=10
+-XX:ShenandoahControlIntervalMin=1
+-XX:ShenandoahInitFreeThreshold=70
+-XX:ShenandoahGarbageThreshold=25
+-XX:ShenandoahGuaranteedGCInterval=300000
+-XX:ShenandoahMinFreeThreshold=10
+-XX:-ShenandoahRegionSampling
+-XX:ShenandoahRegionSamplingRate=40
+"
+#ZGC options. Most of them only available in JDK13+.
+#Copy them to the ZGCP area.
+#-XX:-ZUncommit
+#-XX:ZUncommitDelay=300
+#-XX:SoftMaxHeapSize=4G
+#-XX:+ZCollectionInterval=5
+#-XX:ZAllocationSpikeTolerance=2.0
+ZGCP="
+
+"
+#Experimental options... Use at your own risk!
 if [ "$EXP" = true ]; then
-echo "You have enabled Experimental Options! Use at your own risk!"
-PARMS="$PARMS -XX:+ExitOnOutOfMemoryError -XX:+AlwaysPreTouch -XX:+UseAdaptiveGCBoundary -XX:-DontCompileHugeMethods -XX:+TrustFinalNonStaticFields -XX:+UseFastUnorderedTimeStamps "
+    echo "You have enabled Experimental Options! Use at your own risk!"
+    PARMS="$PARMS -XX:+ExitOnOutOfMemoryError -XX:+AlwaysPreTouch -XX:-DontCompileHugeMethods -XX:+TrustFinalNonStaticFields -XX:+UseFastUnorderedTimeStamps "
 fi
-# Large Pages config
+#Large Pages config
 if [ "$LP" = true ]; then
-PARMS="$PARMS -XX:+UseTransparentHugePages -XX:+UseLargePagesInMetaspace -XX:+UseLargePagesInMetaspace -XX:LargePageSizeInBytes=2M -XX:+UseLargePages"
+    PARMS="$PARMS -XX:+UseTransparentHugePages -XX:LargePageSizeInBytes=2M -XX:+UseLargePages"
 fi
 # G1 Is only useful when you have some ram... The old recommendation was 4GB, but I've seen improvements even on 512MB.
 if [ "$GONE" = true ]; then
-    PARMS="$PARMS -XX:+DisableExplicitGC -XX:-UseParallelGC -XX:-UseParallelOldGC -XX:+UseG1GC $GONEPM"
+    PARMS="$PARMS -XX:+UseG1GC $GONEPM"
     if [ $MAX_RAM -gt 11264 ]; then
         PARMS="$PARMS $GONEP2"
     else
         PARMS="$PARMS $GONEP1"
     fi
 fi
+#Experimental ShenandoahGC
+if [ "$SHEN" = true ]; then
+    PARMS="$PARMS -XX:+UseShenandoahGC $SHENP"
+fi
+#Experimental ZGC
+if [ "$ZGC" = true ]; then
+    PARMS="$PARMS -XX:+UseZGC $ZGCP"
+fi
 # Experimental X86 abomination, some of the flags may not be ARCH specific, so they could work on other platforms as well.
 if [ "$X86" = true ]; then
-    PARMS="$PARMS -XX:+UseCMoveUnconditionally -XX:+UseFPUForSpilling -XX:+UseNewLongLShift -XX:+UseVectorCmov -XX:+UseXMMForArrayCopy -XX:+UseXmmI2D -XX:+UseXmmI2F -XX:+UseXmmLoadAndClearUpper -XX:+UseXmmRegToRegMoveAll"
+    PARMS="$PARMS -XX:+UseCMoveUnconditionally -XX:+UseNewLongLShift -XX:+UseVectorCmov -XX:+UseXmmI2D -XX:+UseXmmI2F"
 fi
 ###
 # Updater. This time actually formatted for readability.
