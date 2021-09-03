@@ -7,6 +7,11 @@
 # Less time spent on GC, the better the performance, but possibly higher ram usage.
 # Note: 1G = 1024M
 
+# The server name
+# This does not affect the server. Just a way for easily process searching
+# Spaces are not allowed
+SERVER_NAME="ServerNameHere"
+
 # The Java run program
 JAVA_RUN="java"
 # USE VALUES IN M! Sometimes setting this to the same value as MAX_RAM can help performance.
@@ -57,6 +62,7 @@ AFTERJAR="--nogui"
 # Normal Parameters
 PARMS="
 -server
+-serverName=$SERVER_NAME
 -XX:+IgnoreUnrecognizedVMOptions
 -XX:+UnlockExperimentalVMOptions
 -XX:+UnlockDiagnosticVMOptions
