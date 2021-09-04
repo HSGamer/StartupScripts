@@ -33,6 +33,12 @@ VERSION="1.16.5"
 BUILD="latest"
 ###
 ###
+# Automatically accept Minecraft's EULA
+# This can cause legal trouble, so make sure to read the EULA before setting this value
+# https://account.mojang.com/documents/minecraft_eula
+EULA_AGREED=false
+###
+###
 # Auto updater toggle.
 UPDATE=true
 # After how many restarts should the script attempt to update the jar.
@@ -65,6 +71,7 @@ AFTERJAR="--nogui"
 PARMS="
 -server
 -serverName=$SERVER_NAME
+-Dcom.mojang.eula.agree=$EULA_AGREED
 -XX:+IgnoreUnrecognizedVMOptions
 -XX:+UnlockExperimentalVMOptions
 -XX:+UnlockDiagnosticVMOptions
