@@ -161,7 +161,7 @@ RUN=0
 function Update {
     if [ "$UPDATE" = true ]; then
         if [ "$(( $RUN % $UPDATE_AFTER ))" = 0 ] || [ "$RUN" = 0 ]; then
-            ONLY_JARLINK=false
+            ONLY_JARLINK=true
             echo "Updating Jar..."
 
             case $PROJECT in
