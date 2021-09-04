@@ -25,7 +25,7 @@ DELAY_RESTART=5
 ###
 ###
 # The server project name
-# Currently allowed: spigot, purpur, airplane, paper, waterfall, travertine
+# Currently allowed: spigot, purpur, airplane, paper, waterfall, travertine, bungeecord
 # If you want to use your custom project, you can directly put the download link of the project file
 PROJECT="paper"
 VERSION="1.16.5"
@@ -165,9 +165,6 @@ function Update {
             echo "Updating Jar..."
 
             case $PROJECT in
-                http* )
-                    JARLINK=$PROJECT
-                    ;;
                 purpur )
                     JARLINK="https://api.pl3x.net/v2/purpur/$VERSION/$BUILD/download"
                     ;;
@@ -183,6 +180,15 @@ function Update {
                         JARLINK="$JARLINK/$BUILD"
                     fi
                     JARLINK="$JARLINK/artifact/launcher-airplane.jar"
+                    ;;
+                bungeecord )
+                    JARLINK="https://ci.md-5.net/job/BungeeCord"
+                    if [ "$BUILD" = "latest" ]; then
+                        JARLINK="$JARLINK/lastSuccessfulBuild"
+                    else
+                        JARLINK="$JARLINK/$BUILD"
+                    fi
+                    JARLINK="$JARLINK/artifact/bootstrap/target/BungeeCord.jar"
                     ;;
                 spigot )
                     SERVER_DIR="$PWD"
@@ -205,7 +211,7 @@ function Update {
                     cd $SERVER_DIR
                     ONLY_JARLINK=false
                     ;;
-                * )
+                paper | waterfall | travertine )
                     if [ "$BUILD" = "latest" ]; then
                         if [ $UPDATE_PROGRAM = "curl" ]; then
                             BUILD=$(curl -s https://papermc.io/api/v2/projects/paper/versions/$VERSION | grep -E -o '[0-9]+' | tail -1)
@@ -215,6 +221,9 @@ function Update {
                         fi
                     fi
                     JARLINK="https://papermc.io/api/v2/projects/$PROJECT/versions/$VERSION/builds/$BUILD/downloads/$PROJECT-$VERSION-$BUILD.jar"
+                    ;;
+                * )
+                    JARLINK=$PROJECT
                     ;;
             esac
 
