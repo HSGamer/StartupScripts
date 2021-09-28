@@ -25,7 +25,7 @@ DELAY_RESTART=5
 ###
 ###
 # The server project name
-# Currently allowed: spigot, purpur, airplane, paper, waterfall, travertine, bungeecord
+# Currently allowed: spigot, purpur, airplane, airplane-purpur, paper, waterfall, travertine, bungeecord
 # If you want to use your custom project, you can directly put the download link of the project file
 PROJECT="paper"
 VERSION="1.16.5"
@@ -175,18 +175,28 @@ function Update {
                 purpur )
                     JARLINK="https://api.pl3x.net/v2/purpur/$VERSION/$BUILD/download"
                     ;;
-                airplane )
-                    if [ "$VERSION" = "1.16.5" ]; then
-                        JARLINK="https://ci.tivy.ca/job/Airplane-1.16"
-                    elif [ "$VERSION" = "1.17.1" ]; then
-                        JARLINK="https://ci.tivy.ca/job/Airplane-1.17"
+                airplane* )
+                    JARLINK="https://ci.tivy.ca/job/Airplane"
+                    AIRPLANE_FILE="launcher-airplane.jar"
+
+                    if [ "$PROJECT" = "airplane-purpur" ]; then
+                        JARLINK="$JARLINK-Purpur"
+                        AIRPLANE_FILE="launcher-airplanepurpur.jar"
                     fi
+
+                    if [ "$VERSION" = "1.16.5" ]; then
+                        JARLINK="$JARLINK-1.16"
+                    elif [ "$VERSION" = "1.17.1" ]; then
+                        JARLINK="$JARLINK-1.17"
+                    fi
+
                     if [ "$BUILD" = "latest" ]; then
                         JARLINK="$JARLINK/lastSuccessfulBuild"
                     else
                         JARLINK="$JARLINK/$BUILD"
                     fi
-                    JARLINK="$JARLINK/artifact/launcher-airplane.jar"
+
+                    JARLINK="$JARLINK/artifact/$AIRPLANE_FILE"
                     ;;
                 bungeecord )
                     JARLINK="https://ci.md-5.net/job/BungeeCord"
