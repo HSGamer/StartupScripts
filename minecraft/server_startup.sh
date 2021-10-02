@@ -25,7 +25,7 @@ DELAY_RESTART=5
 ###
 ###
 # The server project name
-# Currently allowed: spigot, purpur, airplane, airplane-purpur, paper, waterfall, travertine, bungeecord
+# Currently allowed: spigot, purpur, airplane, airplane-purpur, patina, paper, waterfall, travertine, bungeecord
 # If you want to use your custom project, you can directly put the download link of the project file
 PROJECT="paper"
 VERSION="1.16.5"
@@ -227,6 +227,21 @@ function Update {
 
                     cd $SERVER_DIR
                     ONLY_JARLINK=false
+                    ;;
+                patina )
+                    JARLINK="https://github.com/foss-mc/Patina/raw"
+                    if [ "$BUILD" = "latest" ]; then
+                        JARLINK="$JARLINK/releases/$VERSION"
+                    else 
+                        JARLINK="$JARLINK/$BUILD"
+                    fi
+                    if [ "$VERSION" = "1.16.5" ]; then
+                        JARLINK="$JARLINK/1.16.5-paperclip.jar"
+                    elif [ "$VERSION" = "1.17.1" ]; then
+                        JARLINK="$JARLINK/Patina-1.17-R0.1-SNAPSHOT.jar"
+                    elif [ "$VERSION" = "1.17.1" ]; then
+                        JARLINK="$JARLINK/Patina-1.17.1-R0.1-SNAPSHOT.jar"
+                    fi
                     ;;
                 paper | waterfall | travertine )
                     if [ "$BUILD" = "latest" ]; then
