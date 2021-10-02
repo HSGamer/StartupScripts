@@ -167,7 +167,7 @@ fi
 RUN=0
 function Update {
     if [ "$UPDATE" = true ]; then
-        if [ "$(( $RUN % $UPDATE_AFTER ))" = 0 ] || [ "$RUN" = 0 ]; then
+        if [ "$(( $RUN % $UPDATE_AFTER ))" = 0 ]; then
             ONLY_JARLINK=true
             echo "Updating Jar..."
 
@@ -286,8 +286,10 @@ function SDKMAN {
 SDKMAN
 while true
 do
-    Update
-    RUN=$((RUN+1))
+    if [ "$RUN" = 0 ] || [ "$BUILD" = "latest" ]; then
+        Update
+        RUN=$((RUN+1))
+    fi
     Run
 
     echo "Server will restart in:"
