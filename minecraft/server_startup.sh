@@ -37,6 +37,8 @@ BUILD="latest"
 # This can cause legal trouble, so make sure to read the EULA before setting this value
 # https://account.mojang.com/documents/minecraft_eula
 EULA_AGREED=false
+# Forcefully use UTF-8
+FORCE_UTF=false
 ###
 ###
 # Auto updater toggle.
@@ -56,6 +58,9 @@ ZGC=false               #The Z Garbage Collector. Please read: https://krusic22.
 EXP=false               #Enable experimental stuff... It might cause unexpected problems but I haven't noticed any yet.
 LP=false                #Enable only if you have Large/Huge Pages enabled, transparent pages are recommended for regular users.
 X86=false               #Flags that should only work on X86.
+#Some advanced flags from https://github.com/etil2jz/etil-minecraft-flags (untested)
+ADV=false               #Advanced flags
+GRAAL=false             #Flags only works on GraalVM
 ###
 # Jar parameters like --nogui or --forceUpgrade, you can list all options by setting this to --help.
 AFTERJAR="--nogui"
@@ -80,6 +85,57 @@ PARMS="
 -XX:+DisableExplicitGC
 -XX:+PerfDisableSharedMem
 --illegal-access=permit
+"
+# Advanced Parameters
+ADVPARMS="
+-XX:+ParallelRefProcEnabled
+-XX:-UseBiasedLocking
+-XX:+EnableJVMCIProduct
+-XX:+EnableJVMCI
+-XX:+UseJVMCICompiler
+-XX:+EagerJVMCI
+-XX:UseAVX=2
+-XX:+UseStringDeduplication
+-XX:+UseFastUnorderedTimeStamps
+-XX:+UseAES
+-XX:+UseAESIntrinsics
+-XX:UseSSE=4
+-XX:AllocatePrefetchStyle=1
+-XX:+UseLoopPredicate
+-XX:+RangeCheckElimination
+-XX:+EliminateLocks
+-XX:+DoEscapeAnalysis
+-XX:+UseCodeCacheFlushing
+-XX:+UseFastJNIAccessors
+-XX:+OptimizeStringConcat
+-XX:+UseCompressedOops
+-XX:+UseThreadPriorities
+-XX:+OmitStackTraceInFastThrow
+-XX:ThreadPriorityPolicy=1
+-XX:+UseInlineCaches
+-XX:+RewriteBytecodes
+-XX:+RewriteFrequentPairs
+-XX:+UseNUMA
+-XX:+UseFPUForSpilling
+-XX:+UseXMMForArrayCopy
+-XX:+UseXmmLoadAndClearUpper
+-XX:+UseXmmRegToRegMoveAll
+-Djdk.nio.maxCachedBufferSize=262144
+"
+# GraalVM Parameters
+GRAALPARMS="
+-Dgraal.TuneInlinerExploration=1
+-Dgraal.CompilerConfiguration=enterprise
+-Dgraal.UsePriorityInlining=true
+-Dgraal.Vectorization=true
+-Dgraal.OptDuplication=true
+-Dgraal.DetectInvertedLoopsAsCounted=true
+-Dgraal.LoopInversion=true
+-Dgraal.VectorizeHashes=true
+-Dgraal.EnterprisePartialUnroll=true
+-Dgraal.VectorizeSIMD=true
+-Dgraal.StripMineNonCountedLoops=true
+-Dgraal.SpeculativeGuardMovement=true
 "
 # G1 optimizations...
 GONEP="
@@ -132,6 +188,19 @@ SHENP="
 ZGCP="
 
 "
+#Advanced options
+if [ "$ADV" = true ]; then
+    echo "You have enabled Advanced Options! Use at your own risk!"
+    PARMS="$PARMS $ADVPARMS"
+fi
+#GraalVM options
+if [ "$GRAAL" = true ]; then
+    PARMS="$PARMS $GRAALPARMS"
+fi
+#UTF-8 options
+if [ "$FORCE_UTF" = true ]; then
+    PARMS="$PARMS -Dfile.encoding=UTF-8"
+fi
 #Experimental options... Use at your own risk!
 if [ "$EXP" = true ]; then
     echo "You have enabled Experimental Options! Use at your own risk!"
