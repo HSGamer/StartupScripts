@@ -89,7 +89,6 @@ PARMS="
 # Advanced Parameters
 ADVPARMS="
 -XX:+ParallelRefProcEnabled
--XX:-UseBiasedLocking
 -XX:+EnableJVMCIProduct
 -XX:+EnableJVMCI
 -XX:+UseJVMCICompiler
@@ -111,7 +110,6 @@ ADVPARMS="
 -XX:+UseCompressedOops
 -XX:+UseThreadPriorities
 -XX:+OmitStackTraceInFastThrow
--XX:ThreadPriorityPolicy=1
 -XX:+UseInlineCaches
 -XX:+RewriteBytecodes
 -XX:+RewriteFrequentPairs
