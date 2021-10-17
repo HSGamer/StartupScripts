@@ -304,7 +304,7 @@ function Update {
                     fi
                     if [ "$VERSION" = "1.16.5" ]; then
                         JARLINK="$JARLINK/1.16.5-paperclip.jar"
-                    elif [ "$VERSION" = "1.17.1" ]; then
+                    elif [ "$VERSION" = "1.17" ]; then
                         JARLINK="$JARLINK/Patina-1.17-R0.1-SNAPSHOT.jar"
                     elif [ "$VERSION" = "1.17.1" ]; then
                         JARLINK="$JARLINK/Patina-1.17.1-R0.1-SNAPSHOT.jar"
