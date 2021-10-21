@@ -28,7 +28,7 @@ DELAY_RESTART=5
 # Currently allowed: spigot, purpur, airplane, airplane-purpur, patina, paper, waterfall, travertine, bungeecord
 # If you want to use your custom project, you can directly put the download link of the project file
 PROJECT="paper"
-VERSION="1.16.5"
+VERSION="1.17.1"
 # Note: latest is not actually a part of the API, so the script gets the latest build ID using the API first.
 BUILD="latest"
 ###
