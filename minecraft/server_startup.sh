@@ -291,7 +291,7 @@ function SDKMAN {
 SDKMAN
 while true
 do
-    if [ "$RUN" = 0 || "$BUILD" = "latest" ]; then
+    if [ "$RUN" = 0 ] || [ "$BUILD" = "latest" ]; then
         Update
         RUN=$((RUN+1))
     fi
