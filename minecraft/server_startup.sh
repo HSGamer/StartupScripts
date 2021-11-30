@@ -266,7 +266,7 @@ function Update {
         if [ "$(( $RUN % $UPDATE_AFTER ))" = 0 ]; then
             echo "Updating!"
             if [ $UPDATE_PROGRAM = "curl" ]; then
-                curl -s -o "$UPDATER_NAME" "$UPDATER_URL"
+                curl -s -L "$UPDATER_URL" > "$UPDATER_NAME" 
             elif [ $UPDATE_PROGRAM = "wget" ]; then
                 wget "$UPDATER_URL" -O "$UPDATER_NAME" 2>/dev/null
             fi
