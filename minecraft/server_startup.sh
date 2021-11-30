@@ -270,11 +270,13 @@ function Update {
     fi
 }
 function GetUpdater {
-    if [ ! -f "$UPDATER_NAME" ]; then
-        if [ $UPDATE_PROGRAM = "curl" ]; then
-            curl -s -L "$UPDATER_URL" > "$UPDATER_NAME" 
-        elif [ $UPDATE_PROGRAM = "wget" ]; then
-            wget "$UPDATER_URL" -O "$UPDATER_NAME" 2>/dev/null
+    if [ "$UPDATE" = true ]; then
+        if [ ! -f "$UPDATER_NAME" ]; then
+            if [ $UPDATE_PROGRAM = "curl" ]; then
+                curl -s -L "$UPDATER_URL" > "$UPDATER_NAME" 
+            elif [ $UPDATE_PROGRAM = "wget" ]; then
+                wget "$UPDATER_URL" -O "$UPDATER_NAME" 2>/dev/null
+            fi
         fi
     fi
 }
