@@ -48,6 +48,10 @@ UPDATE=true
 UPDATE_AFTER="1"
 # Update program. Current options are curl and wget.
 UPDATE_PROGRAM="wget"
+# Updater File Name
+UPDATER_NAME=updater.jar
+# Updater URL
+UPDATER_URL="https://github.com/HSGamer/MCServerUpdater/releases/latest/download/MCServerUpdater.jar"
 ###
 # Only use one garbage collector!
 GONE=true               #Use G1 GC. Flags from: https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
@@ -262,104 +266,13 @@ RUN=0
 function Update {
     if [ "$UPDATE" = true ]; then
         if [ "$(( $RUN % $UPDATE_AFTER ))" = 0 ]; then
-            ONLY_JARLINK=true
-            echo "Updating Jar..."
-
-            case $PROJECT in
-                purpur )
-                    JARLINK="https://api.pl3x.net/v2/purpur/$VERSION/$BUILD/download"
-                    ;;
-                airplane* )
-                    JARLINK="https://ci.tivy.ca/job/Airplane"
-                    AIRPLANE_FILE="launcher-airplane.jar"
-
-                    if [ "$PROJECT" = "airplane-purpur" ]; then
-                        JARLINK="$JARLINK-Purpur"
-                        AIRPLANE_FILE="launcher-airplanepurpur.jar"
-                    fi
-
-                    if [ "$VERSION" = "1.16.5" ]; then
-                        JARLINK="$JARLINK-1.16"
-                    elif [ "$VERSION" = "1.17.1" ]; then
-                        JARLINK="$JARLINK-1.17"
-                    fi
-
-                    if [ "$BUILD" = "latest" ]; then
-                        JARLINK="$JARLINK/lastSuccessfulBuild"
-                    else
-                        JARLINK="$JARLINK/$BUILD"
-                    fi
-
-                    JARLINK="$JARLINK/artifact/$AIRPLANE_FILE"
-                    ;;
-                bungeecord )
-                    JARLINK="https://ci.md-5.net/job/BungeeCord"
-                    if [ "$BUILD" = "latest" ]; then
-                        JARLINK="$JARLINK/lastSuccessfulBuild"
-                    else
-                        JARLINK="$JARLINK/$BUILD"
-                    fi
-                    JARLINK="$JARLINK/artifact/bootstrap/target/BungeeCord.jar"
-                    ;;
-                spigot )
-                    SERVER_DIR="$PWD"
-                    BUILDTOOLS_LINK="https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
-                    BUILDTOOLS_NAME="BuildTools.jar"
-                    BUILD_DIR="$SERVER_DIR/BuildTools"
-
-                    [ ! -d "$BUILD_DIR" ] && mkdir -p "$BUILD_DIR"
-                    cd $BUILD_DIR
-
-                    if [ $UPDATE_PROGRAM = "curl" ]; then
-                        curl -s -o "$BUILDTOOLS_NAME" "$BUILDTOOLS_LINK"
-                    elif [ $UPDATE_PROGRAM = "wget" ]; then
-                        wget "$BUILDTOOLS_LINK" -O "$BUILDTOOLS_NAME" 2>/dev/null
-                    fi
-
-                    $JAVA_RUN -jar "$BUILDTOOLS_NAME" --rev "$VERSION" --compile-if-changed
-                    cp spigot-*.jar "$SERVER_DIR/$JAR_NAME"
-
-                    cd $SERVER_DIR
-                    ONLY_JARLINK=false
-                    ;;
-                patina )
-                    JARLINK="https://github.com/foss-mc/Patina/raw"
-                    if [ "$BUILD" = "latest" ]; then
-                        JARLINK="$JARLINK/releases/$VERSION"
-                    else 
-                        JARLINK="$JARLINK/$BUILD"
-                    fi
-                    if [ "$VERSION" = "1.16.5" ]; then
-                        JARLINK="$JARLINK/1.16.5-paperclip.jar"
-                    elif [ "$VERSION" = "1.17" ]; then
-                        JARLINK="$JARLINK/Patina-1.17-R0.1-SNAPSHOT.jar"
-                    elif [ "$VERSION" = "1.17.1" ]; then
-                        JARLINK="$JARLINK/Patina-1.17.1-R0.1-SNAPSHOT.jar"
-                    fi
-                    ;;
-                paper | waterfall | travertine )
-                    if [ "$BUILD" = "latest" ]; then
-                        if [ $UPDATE_PROGRAM = "curl" ]; then
-                            BUILD=$(curl -s https://papermc.io/api/v2/projects/paper/versions/$VERSION | grep -E -o '[0-9]+' | tail -1)
-                        fi
-                        if [ $UPDATE_PROGRAM = "wget" ]; then
-                            BUILD=$(wget -q https://papermc.io/api/v2/projects/paper/versions/$VERSION -O - | grep -E -o '[0-9]+' | tail -1)
-                        fi
-                    fi
-                    JARLINK="https://papermc.io/api/v2/projects/$PROJECT/versions/$VERSION/builds/$BUILD/downloads/$PROJECT-$VERSION-$BUILD.jar"
-                    ;;
-                * )
-                    JARLINK=$PROJECT
-                    ;;
-            esac
-
-            if [ "$ONLY_JARLINK" = true ]; then
-                if [ $UPDATE_PROGRAM = "curl" ]; then
-                    curl -s -o "$JAR_NAME" "$JARLINK"
-                elif [ $UPDATE_PROGRAM = "wget" ]; then
-                    wget "$JARLINK" -O "$JAR_NAME" 2>/dev/null
-                fi
+            echo "Updating!"
+            if [ $UPDATE_PROGRAM = "curl" ]; then
+                curl -s -o "$UPDATER_NAME" "$UPDATER_URL"
+            elif [ $UPDATE_PROGRAM = "wget" ]; then
+                wget "$UPDATER_URL" -O "$UPDATER_NAME" 2>/dev/null
             fi
+            $JAVA_RUN -jar "$UPDATER_NAME" --project "$PROJECT" --version "$VERSION" --output "$JAR_NAME"
         fi
     fi
 }
@@ -380,7 +293,7 @@ function SDKMAN {
 SDKMAN
 while true
 do
-    if [ "$RUN" = 0 ] || [ "$BUILD" = "latest" ]; then
+    if [ "$RUN" = 0 || [ "$BUILD" = "latest" ]; then
         Update
         RUN=$((RUN+1))
     fi
