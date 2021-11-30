@@ -61,9 +61,6 @@ EXP=false               #Enable experimental stuff... It might cause unexpected 
 LP=false                #Enable only if you have Large/Huge Pages enabled, transparent pages are recommended for regular users.
 X86=false               #Flags that should only work on X86.
 ILL_ACCESS=false        #Flags to access internal java classes
-#Some advanced flags from https://github.com/etil2jz/etil-minecraft-flags (untested)
-ADV=false               #Advanced flags
-GRAAL=false             #Flags only works on GraalVM
 ###
 # Jar parameters like --nogui or --forceUpgrade, you can list all options by setting this to --help.
 AFTERJAR="--nogui"
@@ -110,57 +107,6 @@ ACCESS_PARMS="
 --add-opens java.base/java.lang.ref=ALL-UNNAMED
 --add-opens java.base/java.util.jar=ALL-UNNAMED
 --add-opens java.base/java.util.zip=ALL-UNNAMED
-"
-# Advanced Parameters
-ADVPARMS="
--XX:+ParallelRefProcEnabled
--XX:+EnableJVMCIProduct
--XX:+EnableJVMCI
--XX:+UseJVMCICompiler
--XX:+EagerJVMCI
--XX:UseAVX=2
--XX:+UseStringDeduplication
--XX:+UseFastUnorderedTimeStamps
--XX:+UseAES
--XX:+UseAESIntrinsics
--XX:UseSSE=4
--XX:AllocatePrefetchStyle=1
--XX:+UseLoopPredicate
--XX:+RangeCheckElimination
--XX:+EliminateLocks
--XX:+DoEscapeAnalysis
--XX:+UseCodeCacheFlushing
--XX:+UseFastJNIAccessors
--XX:+OptimizeStringConcat
--XX:+UseCompressedOops
--XX:+UseThreadPriorities
--XX:+OmitStackTraceInFastThrow
--XX:+UseInlineCaches
--XX:+RewriteBytecodes
--XX:+RewriteFrequentPairs
--XX:+UseNUMA
--XX:+UseFPUForSpilling
--XX:+UseXMMForArrayCopy
--XX:+UseXmmLoadAndClearUpper
--XX:+UseXmmRegToRegMoveAll
--Djdk.nio.maxCachedBufferSize=262144
---add-modules jdk.incubator.vector
-"
-# GraalVM Parameters
-GRAALPARMS="
--Dgraal.TuneInlinerExploration=1
--Dgraal.CompilerConfiguration=enterprise
--Dgraal.UsePriorityInlining=true
--Dgraal.Vectorization=true
--Dgraal.OptDuplication=true
--Dgraal.DetectInvertedLoopsAsCounted=true
--Dgraal.LoopInversion=true
--Dgraal.VectorizeHashes=true
--Dgraal.EnterprisePartialUnroll=true
--Dgraal.VectorizeSIMD=true
--Dgraal.StripMineNonCountedLoops=true
--Dgraal.SpeculativeGuardMovement=true
--Dgraal.InfeasiblePathCorrelation=true
 "
 # G1 optimizations...
 GONEP="
@@ -214,15 +160,6 @@ ZGCP="
 #Access options
 if [ "$ILL_ACCESS" = true ]; then
     PARMS="$PARMS $ACCESS_PARMS"
-fi
-#Advanced options
-if [ "$ADV" = true ]; then
-    echo "You have enabled Advanced Options! Use at your own risk!"
-    PARMS="$PARMS $ADVPARMS"
-fi
-#GraalVM options
-if [ "$GRAAL" = true ]; then
-    PARMS="$PARMS $GRAALPARMS"
 fi
 #UTF-8 options
 if [ "$FORCE_UTF" = true ]; then
