@@ -265,12 +265,16 @@ function Update {
     if [ "$UPDATE" = true ]; then
         if [ "$(( $RUN % $UPDATE_AFTER ))" = 0 ]; then
             echo "Updating!"
-            if [ $UPDATE_PROGRAM = "curl" ]; then
-                curl -s -L "$UPDATER_URL" > "$UPDATER_NAME" 
-            elif [ $UPDATE_PROGRAM = "wget" ]; then
-                wget "$UPDATER_URL" -O "$UPDATER_NAME" 2>/dev/null
-            fi
             $JAVA_RUN -jar "$UPDATER_NAME" --project "$PROJECT" --version "$VERSION" --output "$JAR_NAME"
+        fi
+    fi
+}
+function GetUpdater {
+    if [ ! -f "$UPDATER_NAME" ]; then
+        if [ $UPDATE_PROGRAM = "curl" ]; then
+            curl -s -L "$UPDATER_URL" > "$UPDATER_NAME" 
+        elif [ $UPDATE_PROGRAM = "wget" ]; then
+            wget "$UPDATER_URL" -O "$UPDATER_NAME" 2>/dev/null
         fi
     fi
 }
@@ -289,6 +293,7 @@ function SDKMAN {
 ###
 # You can stop this script by pressing CTRL+C multiple times.
 SDKMAN
+GetUpdater
 while true
 do
     if [ "$RUN" = 0 ] || [ "$BUILD" = "latest" ]; then
