@@ -84,6 +84,7 @@ PARMS="
 -XX:+ShowCodeDetailsInExceptionMessages
 -XX:+DisableExplicitGC
 -XX:+PerfDisableSharedMem
+-Dlog4j2.formatMsgNoLookups=true
 "
 # Access Flags
 ACCESS_PARMS="
