@@ -22,6 +22,8 @@ MAX_RAM=2048
 JAR_NAME=server.jar
 # Delay before restarting
 DELAY_RESTART=5
+# Auto Restart. Set to false to disable the feature and stop the script after the server was stopped
+AUTO_RESTART=true
 ###
 ###
 # The server project name
@@ -234,16 +236,22 @@ function SDKMAN {
 # You can stop this script by pressing CTRL+C multiple times.
 SDKMAN
 GetUpdater
-while true
+while [ "$RUN" = 0 ] || [ "$AUTO_RESTART" = true ]
 do
     if [ "$RUN" = 0 ] || [ "$BUILD" = "latest" ]; then
         Update
         RUN=$((RUN+1))
     fi
+    
     Run
 
-    echo "Server will restart in:"
-    COUNT=$DELAY_RESTART
+    if [ "$AUTO_RESTART" = true ]; then
+        COUNT=$DELAY_RESTART
+    else
+        COUNT=1
+    fi
+
+    echo "The script will continue in:"
     while [ $COUNT -gt "0" ]; do
         echo $COUNT
         sleep 1
