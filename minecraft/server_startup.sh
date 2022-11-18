@@ -227,9 +227,11 @@ function Run {
 }
 # SDKMAN Detection
 function SDKMAN {
-    if [ -f ".sdkmanrc" ]; then
-        source "$HOME/.sdkman/bin/sdkman-init.sh"
-        sdk env
+    if [ -x "$(command -v sdk)" ]; then
+        if [ -f ".sdkmanrc" ]; then
+            source "$HOME/.sdkman/bin/sdkman-init.sh"
+            sdk env
+        fi
     fi
 }
 ###
