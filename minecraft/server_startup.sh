@@ -46,8 +46,6 @@ UPDATE=true
 # After how many restarts should the script attempt to update the jar.
 # Note, the jar will always be updated on first startup!
 UPDATE_AFTER="1"
-# Update program. Current options are curl and wget.
-UPDATE_PROGRAM="wget"
 # Updater File Name
 UPDATER_NAME=updater.jar
 # Updater URL
@@ -212,9 +210,9 @@ function Update {
 function GetUpdater {
     if [ "$UPDATE" = true ]; then
         if [ ! -f "$UPDATER_NAME" ]; then
-            if [ $UPDATE_PROGRAM = "curl" ]; then
+            if [ -x "$(command -v curl)" ]; then
                 curl -s -L "$UPDATER_URL" > "$UPDATER_NAME" 
-            elif [ $UPDATE_PROGRAM = "wget" ]; then
+            elif [ -x "$(command -v wget)" ]; then
                 wget "$UPDATER_URL" -O "$UPDATER_NAME" 2>/dev/null
             fi
         fi
