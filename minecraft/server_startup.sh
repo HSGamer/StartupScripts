@@ -29,8 +29,6 @@ AUTO_RESTART=true
 # The server project name
 PROJECT="paper"
 VERSION="1.17.1"
-# Note: latest is not actually a part of the API, so the script gets the latest build ID using the API first.
-BUILD="latest"
 ###
 ###
 # Automatically accept Minecraft's EULA
@@ -238,10 +236,8 @@ SDKMAN
 GetUpdater
 while [ "$RUN" = 0 ] || [ "$AUTO_RESTART" = true ]
 do
-    if [ "$RUN" = 0 ] || [ "$BUILD" = "latest" ]; then
-        Update
-        RUN=$((RUN+1))
-    fi
+    Update
+    RUN=$((RUN+1))
     
     Run
 
